@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>tds-hub</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>tds-hub</h1>
+    <p class="tagline">Apps running on my OCI VM</p>
+  </header>
+  <main>
+    <input id="filter" type="search" placeholder="Filter apps…" aria-label="Filter apps" autocomplete="off">
+    <ul id="apps" class="grid" aria-live="polite"></ul>
+    <p id="empty" class="empty" hidden>No apps match.</p>
+  </main>
+  <footer>tds-hub.duckdns.org</footer>
+  <script src="app.js"></script>
+</body>
+</html>
