@@ -40,21 +40,25 @@ def check_apps(apps):
                 problems.append(f"{where}: url must be an absolute https:// URL")
         name = app.get("name")
         if isinstance(name, str):
-            if name.lower() in names:
+            key = name.strip().lower()
+            if key in names:
                 problems.append(f"{where}: duplicate name '{name}'")
-            names.add(name.lower())
+            names.add(key)
     return problems
 
 
-def check_index():
+def check_index(site=SITE):
     """Every local file index.html links to must exist."""
-    html = (SITE / "index.html").read_text()
+    html = (site / "index.html").read_text()
     refs = re.findall(r'(?:src|href)="([^":#?]+)"', html)
-    return [f"index.html refers to missing {ref}" for ref in refs if not (SITE / ref).exists()]
+    return [
+        f"index.html refers to missing {ref}"
+        for ref in refs
+        if not (site / ref.lstrip("/")).exists()
+    ]
 
 
-def check_launcher():
-    script = ROOT / "deploy" / "deploy-launcher.sh"
+def check_launcher(script=ROOT / "deploy" / "deploy-launcher.sh"):
     result = subprocess.run(["bash", "-n", str(script)], capture_output=True, text=True)
     return [f"deploy-launcher.sh: {result.stderr.strip()}"] if result.returncode else []
 

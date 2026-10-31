@@ -13,6 +13,10 @@ jobs:
       cancel-in-progress: false
     runs-on: ubuntu-latest
     steps:
+      # Direct pushes to main skip PR CI, so check again before anything goes live.
+      - uses: actions/checkout@v4
+      - run: python3 scripts/check_site.py
+      - run: python3 -m unittest discover -s tests
       - name: Pin the server's host key
         run: |
           mkdir -p ~/.ssh
