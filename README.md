@@ -30,19 +30,19 @@ and puzzle-trainer. Run as `ubuntu`.
 
    ```sh
    mkdir -p ~/apps/tds-hub
-   git clone https://github.com/tdshaw2000/tds-hub ~/apps/tds-hub/repo
+   git clone git@github.com:tdshaw2000/tds-hub.git ~/apps/tds-hub/repo
    cd ~/apps/tds-hub/repo/deploy && docker compose up -d
    ```
 
-   The repo is private, so the clone needs your GitHub credentials (or a read-only deploy key).
+   This uses SSH, so the VM needs a key added to your GitHub account (`ssh -T git@github.com` checks).
 
 3. Route the hostname. Merge the scramble-challenge PR that adds `HUB_SITE_ADDRESS` to
    `edge/compose.yaml` and `edge/Caddyfile` (reference block in
-   [`deploy/caddy/tds-hub.caddy`](deploy/caddy/tds-hub.caddy)). Then, from a checkout of that
-   repo's `edge/` directory:
+   [`deploy/caddy/tds-hub.caddy`](deploy/caddy/tds-hub.caddy)). Then:
 
    ```sh
-   cp compose.yaml Caddyfile ~/apps/caddy/
+   cd ~ && git clone --depth 1 git@github.com:tdshaw2000/scramble-challenge.git sc-tmp
+   cp sc-tmp/edge/compose.yaml sc-tmp/edge/Caddyfile ~/apps/caddy/ && rm -rf sc-tmp
    cd ~/apps/caddy
    echo 'HUB_SITE_ADDRESS=tds-hub.duckdns.org' >> .env
    docker compose up -d       # recreates Caddy: a few seconds of downtime for all apps
