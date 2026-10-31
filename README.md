@@ -10,8 +10,8 @@ Home page linking the apps running on my OCI VM, served at <https://tds-hub.duck
 
 ## Adding an app
 
-Add an entry to `site/apps.json`, merge, then on the VM: `git -C ~/apps/tds-hub/repo pull`.
-No restart needed; the site is bind-mounted.
+Add an entry to `site/apps.json` and merge to `main`. The Deploy workflow updates the VM's
+checkout within a minute; the site is bind-mounted, so there's no restart.
 
 ## Local preview
 
@@ -51,3 +51,37 @@ and puzzle-trainer. Run as `ubuntu`.
    ```
 
    Caddy gets the Let's Encrypt certificate itself.
+
+## Automatic deploys (one-time setup)
+
+`.github/workflows/deploy.yml` runs on every push to `main`. It SSHes to the VM with a key that
+can only run `deploy/deploy-launcher.sh`, which resets the checkout to `origin/main`, runs
+`docker compose up -d` and reloads nginx. Same mechanism as puzzle-trainer.
+
+1. On the VM, install the launcher beside the checkout (not inside it):
+
+   ```sh
+   cp ~/apps/tds-hub/repo/deploy/deploy-launcher.sh ~/apps/tds-hub/
+   chmod +x ~/apps/tds-hub/deploy-launcher.sh
+   ~/apps/tds-hub/deploy-launcher.sh      # should end with "tds-hub deployed: <sha>"
+   ```
+
+2. Make a deploy key restricted to that launcher:
+
+   ```sh
+   ssh-keygen -t ed25519 -f ~/hub-deploy-key -C "tds-hub deploy" -N ""
+   RESTRICTION="command=\"$HOME/apps/tds-hub/deploy-launcher.sh\",no-agent-forwarding,no-X11-forwarding,no-port-forwarding,no-pty"
+   echo "$RESTRICTION $(cat ~/hub-deploy-key.pub)" >> ~/.ssh/authorized_keys
+   cat ~/hub-deploy-key
+   ```
+
+3. In GitHub, Settings, Secrets and variables, Actions, add two repository secrets, then
+   `rm ~/hub-deploy-key ~/hub-deploy-key.pub` on the VM:
+
+   - `DEPLOY_HOST`: the VM's IP or hostname (same value as the other repos).
+   - `DEPLOY_SSH_KEY`: the whole private key printed above, including the BEGIN and END lines.
+
+4. In the Actions tab, run the Deploy workflow (Run workflow) to check it.
+
+If `deploy-launcher.sh` itself changes, repeat step 1's `cp`: it lives outside the checkout
+on purpose, so it isn't updated automatically.
