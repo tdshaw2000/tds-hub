@@ -1,8 +1,26 @@
 [
   {
-    "name": "Example app",
-    "url": "http://tds-hub.duckdns.org:8080",
-    "description": "Placeholder. Replace with your real apps.",
-    "icon": "🧪"
+    "name": "Scramble Challenge",
+    "url": "https://scramble-challenge.duckdns.org",
+    "description": "Live multiplayer scramble-timing party game for speedcubers.",
+    "icon": "🏁"
+  },
+  {
+    "name": "WCA Records Analyser",
+    "url": "https://wca-records-analyser.duckdns.org",
+    "description": "Search WCA competitors and explore their personal records.",
+    "icon": "📊"
+  },
+  {
+    "name": "Timer App PR Tracker",
+    "url": "https://timer-pr-tracker.duckdns.org",
+    "description": "PR progression from Twisty Timer and csTimer exports.",
+    "icon": "⏱️"
+  },
+  {
+    "name": "Puzzle Trainer",
+    "url": "https://puzzle-trainer.duckdns.org",
+    "description": "Trainers for specific parts of solving WCA puzzles.",
+    "icon": "🧩"
   }
 ]

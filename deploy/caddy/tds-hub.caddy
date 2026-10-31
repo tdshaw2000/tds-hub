@@ -1,0 +1,6 @@
+# Reference copy. The live block goes in the scramble-challenge repo's edge/Caddyfile, as
+# {$HUB_SITE_ADDRESS}, with HUB_SITE_ADDRESS=tds-hub.duckdns.org in ~/apps/caddy/.env.
+tds-hub.duckdns.org {
+	encode zstd gzip
+	reverse_proxy tds-hub:8000
+}
