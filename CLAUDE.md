@@ -20,7 +20,8 @@ merge commit (never squash or rebase). The owner is told what shipped but does n
 
 Every PR is reviewed by the `reviewer` subagent (.claude/agents/reviewer.md) before it is marked
 ready or merged. A hook (.claude/hooks/review_gate.py, copied from scramble-challenge) enforces
-this. It blocks opening a PR that isn't a draft, and blocks marking ready or merging until the
+this. Keep it a verbatim copy: its tests live in scramble-challenge (`tests/review/`), not here.
+It blocks opening a PR that isn't a draft, and blocks marking ready or merging until the
 pushed HEAD commit has a passing review. It also blocks merges that aren't merge commits of that
 exact commit, auto-merge, --admin merges and merges through gh api. Verdicts live in
 .git/claude-review/, one file per branch, never committed; to restart a branch's round count
