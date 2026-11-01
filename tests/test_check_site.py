@@ -5,7 +5,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 import tempfile  # noqa: E402
 
-from check_site import check_apps, check_index, check_launcher, main  # noqa: E402
+from check_site import check_apps, check_index, check_launcher, check_skins, main  # noqa: E402
 
 GOOD = {"name": "A", "url": "https://a.duckdns.org", "description": "d", "icon": "🔗"}
 
@@ -83,3 +83,46 @@ class Repo(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class CheckSkins(unittest.TestCase):
+    def make_site(self, ids=("plain", "dark"), link="plain"):
+        site = Path(tempfile.mkdtemp())
+        for sid in ids:
+            (site / "themes" / sid).mkdir(parents=True)
+            (site / "themes" / sid / "theme.css").write_text("")
+        (site / "index.html").write_text(f'<link rel="stylesheet" href="themes/{link}/theme.css">')
+        return site
+
+    def config(self, **over):
+        base = {"default": "plain", "skins": [
+            {"id": "plain", "label": "Minimal"}, {"id": "dark", "label": "Dark"}]}
+        return {**base, **over}
+
+    def test_a_valid_config_has_no_problems(self):
+        self.assertEqual(check_skins(self.config(), self.make_site()), [])
+
+    def test_shipped_config_is_valid(self):
+        import json
+        site = Path(__file__).resolve().parent.parent / "site"
+        self.assertEqual(check_skins(json.loads((site / "skins.json").read_text()), site), [])
+
+    def test_missing_theme_file_is_rejected(self):
+        self.assertTrue(check_skins(self.config(), self.make_site(ids=("plain",))))
+
+    def test_default_must_be_listed(self):
+        self.assertTrue(check_skins(self.config(default="nope"), self.make_site()))
+
+    def test_index_must_link_the_default_skin(self):
+        self.assertTrue(check_skins(self.config(), self.make_site(link="dark")))
+
+    def test_bad_ids_labels_and_duplicates_are_rejected(self):
+        site = self.make_site()
+        for skins in (
+            [{"id": "../x", "label": "X"}],
+            [{"id": "plain", "label": " "}],
+            [{"id": "plain", "label": "A"}, {"id": "plain", "label": "B"}],
+            [],
+        ):
+            with self.subTest(skins=skins):
+                self.assertTrue(check_skins(self.config(skins=skins), site))

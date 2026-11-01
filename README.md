@@ -4,7 +4,8 @@ Home page linking the apps running on my OCI VM, served at <https://tds-hub.duck
 
 ## Layout
 
-- `site/` is the static site: `index.html`, `style.css`, `app.js`.
+- `site/` is the static site: `index.html`, `app.js`, `skin.js`.
+- `site/skins.json` lists the skins (`default`, then `{id, label}` in gear-menu order). Each skin is `site/themes/<id>/theme.css`. A visitor's pick is kept in their browser (localStorage). To add a skin: add the folder, add it to `skins.json`. `index.html` must link the default skin's theme.
 - `site/apps.json` is the app list. Each entry has `name`, `url`, `description`, and an optional emoji `icon`.
 - `deploy/` runs it on the VM: an nginx container on the shared edge Caddy network, alias `tds-hub`, port 8000.
 

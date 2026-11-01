@@ -1,0 +1,9 @@
+{
+  "default": "plain",
+  "skins": [
+    { "id": "plain", "label": "Minimal" },
+    { "id": "dark", "label": "Dark" },
+    { "id": "dos", "label": "DOS" },
+    { "id": "neon80s", "label": "VHS" }
+  ]
+}
