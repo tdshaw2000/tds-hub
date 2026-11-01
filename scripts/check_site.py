@@ -47,6 +47,39 @@ def check_apps(apps):
     return problems
 
 
+def check_skins(config, site=SITE):
+    """Returns a list of problems with a skins.json value; empty means valid. Each skin is
+    a folder themes/<id>/theme.css; index.html must start on the default skin."""
+    if not isinstance(config, dict):
+        return ["skins.json must be an object"]
+    skins = config.get("skins")
+    if not isinstance(skins, list) or not skins:
+        return ["skins.json 'skins' must be a non-empty list"]
+    problems, ids = [], []
+    for i, skin in enumerate(skins):
+        where = f"skins.json entry {i}"
+        sid = skin.get("id") if isinstance(skin, dict) else None
+        label = skin.get("label") if isinstance(skin, dict) else None
+        if not isinstance(sid, str) or not re.fullmatch(r"[a-z0-9_-]+", sid):
+            problems.append(f"{where}: 'id' must be a folder name like 'dark'")
+            continue
+        if not isinstance(label, str) or not label.strip():
+            problems.append(f"{where}: 'label' must be a non-empty string")
+        if sid in ids:
+            problems.append(f"{where}: duplicate id '{sid}'")
+        ids.append(sid)
+        if not (site / "themes" / sid / "theme.css").is_file():
+            problems.append(f"{where}: themes/{sid}/theme.css is missing")
+    default = config.get("default")
+    if default not in ids:
+        problems.append("skins.json 'default' must be one of the listed ids")
+    elif (site / "index.html").exists():
+        html = (site / "index.html").read_text()
+        if f'href="themes/{default}/theme.css"' not in html:
+            problems.append(f"index.html must link themes/{default}/theme.css (the default)")
+    return problems
+
+
 def check_index(site=SITE):
     """Every local file index.html links to must exist."""
     html = (site / "index.html").read_text()
@@ -70,6 +103,10 @@ def main():
         problems = [f"apps.json is not valid JSON: {err}"]
     else:
         problems = check_apps(apps)
+    try:
+        problems += check_skins(json.loads((SITE / "skins.json").read_text()))
+    except (OSError, json.JSONDecodeError) as err:
+        problems.append(f"skins.json is not readable JSON: {err}")
     problems += check_index() + check_launcher()
     for problem in problems:
         print(problem, file=sys.stderr)

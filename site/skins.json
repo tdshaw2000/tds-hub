@@ -1,0 +1,11 @@
+{
+  "default": "plain",
+  "skins": [
+    { "id": "plain", "label": "Minimal" },
+    { "id": "dark", "label": "Dark" },
+    { "id": "dos", "label": "DOS" },
+    { "id": "mario64", "label": "Mario" },
+    { "id": "monkeyisland2", "label": "Monkey" },
+    { "id": "neon80s", "label": "VHS" }
+  ]
+}

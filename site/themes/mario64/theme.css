@@ -1,0 +1,66 @@
+/* "Mario" skin (folder "mario64"): a late-90s 3D-platformer feel in CSS alone. Sky and
+   clouds, a checkered grassy hill, a chunky outlined title, dark rounded dialog boxes.
+   Font: Luckiest Guy (Apache 2.0; licence in fonts/). */
+@font-face { font-family: "Luckiest Guy"; src: url("fonts/luckiest-guy.woff2") format("woff2"); font-display: swap; }
+:root {
+  --sky-top: #3aa0ff; --sky-bottom: #bfe8ff; --grass: #3fbf3f; --grass-dark: #2e9a2e;
+  --dialog: rgba(18, 24, 64, 0.96); --edge: #fdfdfd; --text: #fff; --muted: #b9c6ff;
+  --gold: #ffd21f; --red: #e5322d; --outline: #1a1030;
+  --display: "Luckiest Guy", "Arial Black", Impact, sans-serif;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body {
+  margin: 0; min-height: 100vh; display: flex; flex-direction: column;
+  font: 17px/1.45 "Trebuchet MS", "Segoe UI", system-ui, sans-serif; color: var(--text);
+  background:
+    radial-gradient(ellipse 90px 34px at 18% 14%, #fff 60%, transparent 62%),
+    radial-gradient(ellipse 60px 26px at 26% 12%, #fff 60%, transparent 62%),
+    radial-gradient(ellipse 110px 38px at 78% 22%, #fff 60%, transparent 62%),
+    radial-gradient(ellipse 70px 28px at 86% 19%, #fff 60%, transparent 62%),
+    linear-gradient(var(--sky-top), var(--sky-bottom) 70%);
+  background-attachment: fixed;
+}
+body::after {
+  content: ""; position: fixed; left: -10%; right: -10%; bottom: -12vh; height: 34vh; z-index: -1;
+  border-radius: 50% 50% 0 0;
+  background: repeating-conic-gradient(var(--grass) 0 25%, var(--grass-dark) 0 50%) 0 0 / 56px 56px;
+  box-shadow: inset 0 10px 0 rgba(255, 255, 255, 0.18);
+}
+header, main, footer { width: 100%; max-width: 960px; margin: 0 auto; padding: 0 1.25rem; }
+header { position: relative; padding-top: 2.5rem; padding-bottom: 1.25rem; }
+h1 {
+  margin: 0; font: 3rem/1 var(--display); letter-spacing: 0.03em; color: var(--red);
+  -webkit-text-stroke: 2px var(--outline); text-shadow: 0 4px 0 var(--outline); transform: rotate(-2deg); transform-origin: left;
+}
+.tagline { margin: 0.6rem 0 0; font-weight: 700; color: var(--outline); }
+main { flex: 1; }
+#filter {
+  width: 100%; padding: 12px 14px; margin-bottom: 1.25rem; font: 700 1.1rem/1.2 inherit; font-family: inherit;
+  color: var(--outline); background: #fff; border: 4px solid var(--outline); border-radius: 14px;
+}
+#filter:focus { outline: 0; border-color: var(--gold); }
+.grid { list-style: none; padding: 0; margin: 0; display: grid; gap: 1.1rem; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+.card {
+  display: flex; gap: 0.85rem; height: 100%; padding: 1rem 1.1rem; text-decoration: none; color: inherit;
+  background: var(--dialog); border: 4px solid var(--edge); border-radius: 22px; box-shadow: 0 8px 0 rgba(0, 0, 0, 0.25);
+  transition: transform .12s;
+}
+.card:hover, .card:focus-visible { transform: translateY(-3px) rotate(-1deg); outline: 0; border-color: var(--gold); }
+.icon { font-size: 1.8rem; line-height: 1; }
+.name { margin: 0; font: 1.35rem/1.1 var(--display); letter-spacing: 0.03em; color: var(--gold); -webkit-text-stroke: 1px var(--outline); text-shadow: 0 3px 0 var(--outline); }
+.desc { margin: 0.35rem 0 0; color: var(--muted); font-size: 0.95rem; }
+.host { margin: 0.4rem 0 0; color: #fff; font-size: 0.8rem; font-weight: 700; word-break: break-all; }
+.empty { color: var(--outline); font-weight: 700; }
+footer { padding-top: 2rem; padding-bottom: 2rem; color: #fff; font-weight: 700; text-shadow: 0 2px 0 var(--outline); font-size: 0.85rem; }
+
+/* Skin picker */
+.skin-picker { position: absolute; top: 0.75rem; right: 1.25rem; z-index: 5; }
+.skin-picker-toggle { list-style: none; cursor: pointer; font-size: 1.6rem; line-height: 1; padding: 6px; color: #fff; text-shadow: 0 2px 0 var(--outline); }
+.skin-picker-toggle::-webkit-details-marker { display: none; }
+.skin-menu { position: absolute; right: 0; top: 100%; min-width: 150px; background: var(--dialog); border: 4px solid var(--edge); border-radius: 16px; padding: 8px; box-shadow: 0 6px 0 rgba(0, 0, 0, 0.25); }
+.skin-menu-title { margin: 0 6px 4px; font-size: 0.8rem; color: var(--muted); }
+.skin-option { display: block; width: 100%; text-align: left; background: none; border: 0; font: inherit; font-weight: 700; cursor: pointer; padding: 8px 6px; border-radius: 8px; color: var(--text); }
+.skin-option:hover { background: rgba(255, 255, 255, 0.12); }
+.skin-option[aria-current="true"] { color: var(--gold); }
+.skin-option[aria-current="true"]::after { content: " \2713"; }

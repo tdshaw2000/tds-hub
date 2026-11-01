@@ -1,0 +1,65 @@
+/* "Monkey" skin (folder "monkeyisland2"): an early-90s pirate point-and-click feel. The
+   pixel-art harbour at night (harbour.webp, harbour-wide.webp for landscape screens), black
+   verb-panel boxes with violet pixel borders, a sunset-gradient title. Font: VT323 (SIL OFL;
+   licence in fonts/). */
+@font-face { font-family: "VT323"; src: url("fonts/vt323.woff2") format("woff2"); font-display: swap; }
+:root {
+  --sky: #0b0b3c; --harbour: url("harbour.webp"); --panel: #07061a; --verb: #8a7dff; --verb-dark: #4a3fb0;
+  --text: #e6e0ff; --muted: #a99be8; --cyan: #5ff2f2; --yellow: #ffd23f; --orange: #ff8a1c; --outline: #1a0a00;
+  --mono: "VT323", "Courier New", monospace;
+  --notch: polygon(
+    0 6px, 3px 6px, 3px 3px, 6px 3px, 6px 0,
+    calc(100% - 6px) 0, calc(100% - 6px) 3px, calc(100% - 3px) 3px, calc(100% - 3px) 6px, 100% 6px,
+    100% calc(100% - 6px), calc(100% - 3px) calc(100% - 6px), calc(100% - 3px) calc(100% - 3px),
+    calc(100% - 6px) calc(100% - 3px), calc(100% - 6px) 100%,
+    6px 100%, 6px calc(100% - 3px), 3px calc(100% - 3px), 3px calc(100% - 6px), 0 calc(100% - 6px)
+  );
+}
+@media (min-aspect-ratio: 1/1) { :root { --harbour: url("harbour-wide.webp"); } }
+html { font-synthesis: none; }
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body {
+  margin: 0; min-height: 100vh; display: flex; flex-direction: column;
+  font: 22px/1.3 var(--mono); color: var(--text); cursor: crosshair; background: var(--sky);
+}
+body::before { content: ""; position: fixed; inset: 0; z-index: -1; background: var(--sky) var(--harbour) center bottom / cover no-repeat; }
+header, main, footer { width: 100%; max-width: 960px; margin: 0 auto; padding: 0 1.25rem; }
+header { position: relative; padding-top: 2rem; padding-bottom: 1rem; }
+h1 {
+  display: inline-block; margin: 0; font: 3.2rem/1 var(--mono); letter-spacing: 0.02em; color: transparent;
+  background: linear-gradient(#fff3a8 0 30%, var(--yellow) 30% 55%, var(--orange) 55% 80%, #d8480e 80%);
+  -webkit-background-clip: text; background-clip: text;
+  filter: drop-shadow(3px 3px 0 var(--outline)) drop-shadow(2px 2px 0 #000);
+}
+.tagline { margin: 0.4rem 0 0; color: var(--cyan); text-shadow: 2px 2px 0 #000; }
+main { flex: 1; }
+#filter {
+  width: 100%; padding: 8px 12px; margin-bottom: 1.25rem; font: inherit; color: var(--text);
+  background: var(--panel); border: 4px solid var(--verb); border-radius: 0; box-shadow: inset 0 0 0 3px var(--verb-dark);
+}
+#filter:focus { outline: 0; border-color: var(--yellow); }
+.grid { list-style: none; padding: 0; margin: 0; display: grid; gap: 1.1rem; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); }
+.card {
+  display: flex; gap: 0.85rem; height: 100%; padding: 16px 18px; text-decoration: none; color: inherit;
+  background: var(--panel); border: 4px solid var(--verb); clip-path: var(--notch); box-shadow: inset 0 0 0 4px var(--verb-dark);
+}
+.card:hover, .card:focus-visible { border-color: var(--yellow); outline: 0; }
+.card:hover .name, .card:focus-visible .name { color: #fff; }
+.icon { font-size: 1.8rem; line-height: 1; }
+.name { margin: 0; font-size: 1.7rem; line-height: 1.1; color: var(--yellow); }
+.desc { margin: 0.2rem 0 0; color: var(--muted); }
+.host { margin: 0.3rem 0 0; color: var(--cyan); font-size: 1rem; word-break: break-all; }
+.empty { color: var(--text); text-shadow: 2px 2px 0 #000; }
+footer { padding-top: 2rem; padding-bottom: 2rem; color: var(--muted); text-shadow: 2px 2px 0 #000; font-size: 1rem; }
+
+/* Skin picker */
+.skin-picker { position: absolute; top: 0.75rem; right: 1.25rem; z-index: 5; }
+.skin-picker-toggle { list-style: none; cursor: pointer; font-size: 1.8rem; line-height: 1; padding: 6px; color: var(--yellow); text-shadow: 2px 2px 0 #000; }
+.skin-picker-toggle::-webkit-details-marker { display: none; }
+.skin-menu { position: absolute; right: 0; top: 100%; min-width: 150px; background: var(--panel); border: 4px solid var(--verb); padding: 8px; box-shadow: inset 0 0 0 3px var(--verb-dark); }
+.skin-menu-title { margin: 0 6px 4px; color: var(--muted); font-size: 1rem; }
+.skin-option { display: block; width: 100%; text-align: left; background: none; border: 0; border-radius: 0; font: inherit; cursor: pointer; padding: 4px 6px; color: var(--text); }
+.skin-option:hover { background: var(--verb-dark); }
+.skin-option[aria-current="true"] { color: var(--yellow); }
+.skin-option[aria-current="true"]::after { content: " \2713"; }
